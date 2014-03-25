@@ -6,7 +6,7 @@ describe User do
     first_name: 'Barry',
     last_name: 'Zuckercorn',
     email: 'barry@hesverygood.com',
-    role: 'EE',
+    role: 'ee',
     fun_fact: 'has a pet tortoise'
     }}
 
@@ -36,6 +36,12 @@ describe User do
       user = User.create(valid_attrs.merge(email: ''))
       expect(user.errors[:email]).to include("can't be blank")
     end
+
+    it "requires a role" do
+      user = User.create(valid_attrs.merge(role: ''))
+      expect(user.errors[:role]).to include("can't be blank")
+    end
+
 
 
   end
