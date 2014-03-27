@@ -36,39 +36,53 @@ describe 'validations' do
 
 
   describe 'instance methods' do
-    user = User.create(first_name: "Terrence", last_name: "Willcox", email: "t.willcox@gmail.com")
-    group = InterestGroup.create(name: 'Brutus', creator: user)
+    let!(:user) { User.create(first_name: "Terrence", last_name: "Willcox", email: "t.willcox@gmail.com") }
+    let!(:group) { InterestGroup.create(name: 'Brutus', creator: user) }
+
+    let!(:p1) { Post.create(title: "The best", body: "First award", user: user, interest_group: group) }
+    let!(:p2) { Post.create(title: "The coolest", body: "First award", user: user, interest_group: group) }
+    let!(:p3) { Post.create(title: "The first", body: "First award", user: user, interest_group: group) }
+
+
   #it "creates 10 different group members" do
-    (0...9).each do |number|
-      Post.create(
-        title: number.to_s,
-        body: number.to_s,
-        user: user,
-        interest_group: group
-        )
+    before :each do
+      (0...9).each do |number|
+        Post.create(
+          title: number.to_s,
+          body: number.to_s,
+          user: user,
+          interest_group: group
+          )
       end
+
+      #ig = InterestGroup.create()
 
       3.times do Comment.create(
         body:"Gangnam rules spam woot",
-        post_id: 1
+        post: p1
+        #interest_group: ig
         )
       end
-    2.times do Comment.create(
-      body: "This is legendary",
-      post_id: 3
-      )
-    end
-      Comment.create(
-        body:"beasters",
-        post_id: 5
+
+      2.times do Comment.create(
+        body: "This is legendary",
+        post: p2
         )
 
-    it 'returns the number of posts in the group' do
-      expect(group.post_count).to eq(10)
+      end
+
+      Comment.create(
+          body:"beasters",
+          post: p3
+          )
     end
 
+    # it 'returns the number of posts in the group' do
+    #   expect(group.post_count).to eq(10)
+    # end
+
     it "The top 3 most popular posts (determined by the number of comments)" do
-      expect(group.top_posts).to eq(1)
+      expect(group.top_posts).to include(p1, p2, p3)
     end
 
   end

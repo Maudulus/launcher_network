@@ -13,7 +13,7 @@ class InterestGroup < ActiveRecord::Base
   end
 
   def top_posts
-    Post.order("comments_count").first(3)
+    Post.joins(:comments).group('posts.id').order('COUNT(*) DESC').limit(3)
   end
 
 end
